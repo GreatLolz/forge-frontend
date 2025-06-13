@@ -7,12 +7,14 @@ function App() {
 
   return (
     <>
-      <div className="flex h-screen w-full bg-neutral-950 text-neutral-300">
+      <div className="flex h-screen bg-neutral-950 text-neutral-300">
         <MainSidebar />
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="/datasets" element={<Datasets />} />
-        </Routes>
+        <div className="flex-1">
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="/datasets" element={<Datasets />} />
+          </Routes>
+        </div>
       </div>
     </>
   )
