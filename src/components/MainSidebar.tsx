@@ -15,10 +15,12 @@ export default function MainSidebar() {
 
     return (
         <div className="w-64 bg-neutral-900">
-            <div className="flex flex-row items-center px-5 py-2 justify-between">
-                <img src={logo} alt="Synapse Logo" className="w-16" />
-                <h1 className="text-xl font-bold">Synapse Forge</h1>
-            </div>
+            <NavLink to="/">
+                <div className="flex flex-row items-center px-5 py-2 justify-between">
+                    <img src={logo} alt="Synapse Logo" className="w-16" />
+                    <h1 className="text-xl font-bold">Synapse Forge</h1>
+                </div>
+            </NavLink>
             <hr className="my-2 mx-5 border-neutral-700" />
             <div className="flex flex-col px-4 space-y-2">
                 {pages.map((page) => (
