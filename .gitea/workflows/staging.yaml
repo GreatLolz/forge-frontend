@@ -1,0 +1,49 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [staging]
+
+jobs:
+  deploy-staging:
+    if: ${{ secrets.STAGING_SSH_KEY != '' && vars.STAGING_SSH_USER != '' && vars.STAGING_SSH_HOST != '' }}
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Gitea container registry
+        run: |
+          echo "${{ secrets.SYNAPSE_TOKEN }}" | docker login git.tessact.cloud -u synapse-actions --password-stdin
+
+      - name: Set up release tag
+        id: vars
+        run: |
+          echo "RELEASE_TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "IMAGE=git.tessact.cloud/synapse/${{ github.event.repository.name }}" >> $GITHUB_ENV
+          echo "TAG=staging-latest" >> $GITHUB_ENV
+
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE:$TAG .
+
+      - name: Push Docker image
+        run: |
+          docker push $IMAGE:$TAG
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          known_hosts: "ignore"
+
+      - name: Resolve staging server host key
+        run: ssh-keyscan -H ${{ vars.STAGING_SSH_HOST }} > ~/.ssh/known_hosts
+
+      - name: Deploy to staging
+        env:
+          SSH_USER: ${{ vars.STAGING_SSH_USER }}
+          SSH_HOST: ${{ vars.STAGING_SSH_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "cd ~/deployment && ./deploy.sh"
