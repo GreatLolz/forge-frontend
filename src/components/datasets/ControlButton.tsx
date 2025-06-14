@@ -4,7 +4,7 @@ export default function ControlButton({ icon, text }: { icon: React.ReactNode, t
     return (
         <Button className="px-2 rounded-md flex items-center space-x-2 hover:bg-neutral-900 hover:cursor-pointer">
             {icon}
-            <span>{text}</span>
+            <span className="text-sm">{text}</span>
         </Button>
     )
 }

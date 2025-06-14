@@ -4,7 +4,7 @@ import ControlButton from "../components/datasets/ControlButton";
 export default function Datasets() {
     return (
         <div className="p-10 h-full flex flex-col">
-            <h1 className="text-3xl font-bold mb-10">Datasets</h1>
+            <h1 className="text-2xl font-bold mb-10">Datasets</h1>
             <div className="h-8 flex space-x-1">
                 <ControlButton icon={<Plus size={20} />} text="Create" />
                 <ControlButton icon={<Pen size={20} />} text="Edit in Dataset Studio" />

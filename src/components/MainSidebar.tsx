@@ -7,10 +7,10 @@ import { NavLink } from "react-router"
 
 export default function MainSidebar() {
     const pages = [
-        { name: "Datasets", href: "/datasets", icon: <Clipboard />},
-        { name: "Page 2", href: "/2", icon: <Aperture />},
-        { name: "Page 3", href: "/3", icon: <Book />},
-        { name: "Page 4", href: "/4", icon: <ChartBar />},
+        { name: "Datasets", href: "/datasets", icon: <Clipboard size={20} />},
+        { name: "Page 2", href: "/2", icon: <Aperture size={20} />},
+        { name: "Page 3", href: "/3", icon: <Book size={20} />},
+        { name: "Page 4", href: "/4", icon: <ChartBar size={20} />},
     ]
 
     return (
@@ -21,7 +21,7 @@ export default function MainSidebar() {
                     <h1 className="text-xl font-bold">Synapse Forge</h1>
                 </div>
             </NavLink>
-            <hr className="my-2 mx-5 border-neutral-700" />
+            <hr className="my-2 mx-6 border-neutral-700" />
             <div className="flex flex-col px-4 space-y-2">
                 {pages.map((page) => (
                     <NavLink
@@ -34,7 +34,7 @@ export default function MainSidebar() {
                         }
                     >
                         {page.icon}
-                        <span>{page.name}</span>
+                        <span className="text-sm">{page.name}</span>
                     </NavLink>
                 ))}
             </div>
