@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 
 export default function Landing() {
+    const api_url = import.meta.env.VITE_API_URL || "/api/v1"
+
     const login = () => {
-        window.location.href = `/api/v1/auth/login`;
+        window.location.href = `${api_url}/auth/login`;
     }
 
     useEffect(() => {

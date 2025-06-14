@@ -7,10 +7,12 @@ import Landing from "./pages/Landing";
 import axios from "axios";
 
 function App() {
+  const api_url = import.meta.env.VITE_API_URL || "/api/v1"
+
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
 
   const getUser = () => {
-    axios.get(`/api/v1/me`, { withCredentials: true })
+    axios.get(`${api_url}/me`, { withCredentials: true })
       .then((response) => {
         console.log(`Logged in as ${response.data.email}`)
         setLoggedIn(true)
