@@ -52,7 +52,7 @@ export default function Datasets() {
             <div className="bg-neutral-900 w-full h-full mt-2 rounded-xl flex flex-col flex-1 overflow-hidden">
                 <div className="grid grid-cols-12 gap-2 border-b border-b-neutral-700 px-3 py-2 text-sm text-neutral-400">
                     <Checkbox checked={mainChecked} onChange={setMainChecked} className="group col-span-1 w-5 h-5 border-neutral-700 border-1 hover:bg-neutral-800 flex items-center justify-center hover:cursor-default">
-                        <X className="hidden group-data-[checked]:block text-violet-300" size={16} />
+                        <div className="hidden group-data-[checked]:block bg-violet-300 p-1" />
                     </Checkbox>
                     <div className="col-span-1">ID</div>
                     <div className="col-span-2">Name</div> 
