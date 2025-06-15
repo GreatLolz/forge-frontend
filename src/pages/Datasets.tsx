@@ -1,4 +1,4 @@
-import { ArrowUpFromLine, Import, Pen, Plus, RefreshCcw, Tag, Trash, X } from "lucide-react";
+import { ArrowUpFromLine, Import, Pen, Plus, RefreshCcw, Tag, Trash } from "lucide-react";
 import ControlButton from "../components/datasets/ControlButton";
 import { Checkbox } from "@headlessui/react";
 import TableItem from "../components/datasets/TableItem";

@@ -5,17 +5,21 @@ import Home from "./pages/Home";
 import { useEffect, useState } from "react";
 import Landing from "./pages/Landing";
 import axios from "axios";
+import type { UserDetails } from "./types/user";
+import User from "./components/User";
 
 function App() {
   const api_url = import.meta.env.VITE_API_URL || "/api/v1"
 
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null)
 
   const getUser = () => {
     axios.get(`${api_url}/me`, { withCredentials: true })
       .then((response) => {
         console.log(`Logged in as ${response.data.email}`)
         setLoggedIn(true)
+        setUserDetails(response.data)
       })
       .catch(() => {
         console.log('Session invalid, logging out...')
@@ -39,6 +43,7 @@ function App() {
                 <Route path="/datasets" element={<Datasets />} />
               </Routes>
             </div>
+            <User userDetails={userDetails} />
           </>
         ) : loggedIn === false ? (
           <Landing />

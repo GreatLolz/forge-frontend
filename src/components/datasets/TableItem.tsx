@@ -1,5 +1,4 @@
 import { Checkbox } from "@headlessui/react";
-import { X } from "lucide-react";
 import TableItemMenu from "./TableItemMenu";
 
 export interface TableItemProps {
