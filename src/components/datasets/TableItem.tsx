@@ -1,5 +1,6 @@
 import { Checkbox } from "@headlessui/react";
-import { EllipsisVertical, X } from "lucide-react";
+import { X } from "lucide-react";
+import TableItemMenu from "./TableItemMenu";
 
 export interface TableItemProps {
     id: number;
@@ -26,9 +27,7 @@ export default function TableItem({ id, name, type, createdAt, updatedAt, sample
                 <div className="col-span-2">{updatedAt}</div>
                 <div className="col-span-1">{samples}</div>
                 <div className="col-span-1 flex justify-end">
-                    <button className="p-1 rounded-full hover:bg-neutral-700 hover:cursor-pointer">
-                        <EllipsisVertical size={18} />
-                    </button>
+                    <TableItemMenu />
                 </div>
             </div>
         </div>
