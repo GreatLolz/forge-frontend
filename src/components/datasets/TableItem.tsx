@@ -1,7 +1,16 @@
 import { Checkbox } from "@headlessui/react";
 import { EllipsisVertical, X } from "lucide-react";
 
-export default function TableItem({ id, name, type, createdAt, updatedAt, samples }: { id: number, name: string, type: string, createdAt: string, updatedAt: string, samples: number }) {
+export interface TableItemProps {
+    id: number;
+    name: string;
+    type: string;
+    createdAt: string;
+    updatedAt: string;
+    samples: number;
+}
+
+export default function TableItem({ id, name, type, createdAt, updatedAt, samples }: TableItemProps) {
     return (
         <div className="divide-y divide-neutral-800">
             <div className="grid grid-cols-12 gap-2 items-center px-3 py-2 hover:bg-neutral-800/50 hover:cursor-pointer text-sm">
