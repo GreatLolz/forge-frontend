@@ -9,7 +9,7 @@ export default function TableItemMenu() {
         </MenuButton>
         <MenuItems 
             anchor="left start" 
-            className="text-sm w-max text-neutral-300 bg-neutral-800 border-neutral-700 border-1 rounded-sm absolute focus:outline-none transition origin-top duration-100 ease-in data-[closed]:scale-95 data-[closed]:opacity-0 p-0.5"
+            className="text-sm w-max text-neutral-300 bg-neutral-800 border-neutral-700 border-1 rounded-sm absolute focus:outline-none transition origin-top-right duration-100 ease-in data-[closed]:scale-95 data-[closed]:opacity-0 p-0.5"
             transition
         >
             <MenuItem as="div" className="p-1 px-2 flex items-center hover:bg-neutral-700 hover:cursor-pointer">
