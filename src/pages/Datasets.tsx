@@ -72,8 +72,8 @@ export default function Datasets() {
                             id={dataset.id} 
                             name={dataset.name} 
                             type={DATASET_TYPES[dataset.type] || dataset.type} 
-                            createdAt={dataset.created_at} 
-                            updatedAt={dataset.updated_at} 
+                            createdAt={new Date(dataset.created_at).toLocaleString()} 
+                            updatedAt={new Date(dataset.updated_at).toLocaleString()} 
                             samples={dataset.sample_count} 
                             checked={checkedItems[dataset.id] || false} 
                             onChange={(checked) => handleItemCheckboxChange(dataset.id, checked)} 
