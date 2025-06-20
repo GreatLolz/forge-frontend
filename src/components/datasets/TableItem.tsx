@@ -2,7 +2,7 @@ import { Checkbox } from "@headlessui/react";
 import TableItemMenu from "./TableItemMenu";
 
 export interface TableItemProps {
-    id: number;
+    id: string;
     name: string;
     type: string;
     createdAt: string;

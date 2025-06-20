@@ -1,5 +1,5 @@
 export type Dataset = {
-    id: number,
+    id: string,
     name: string,
     type: string,
     created_at: string,

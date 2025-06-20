@@ -31,6 +31,8 @@ export default class ApiClient {
         }
     }
 
+    // datasets
+
     public async getDatasets(): Promise<Dataset[] | null> {
         try {
             const response = await axios.get(`${this.api_url}/datasets`, { withCredentials: true })
@@ -38,6 +40,18 @@ export default class ApiClient {
         } catch (error) {
             console.error(error)
             return null
+        }
+    }
+
+    public async importDataset(file: File): Promise<boolean> {
+        try {
+            const formData = new FormData()
+            formData.append("import_file", file)
+            const response = await axios.post(`${this.api_url}/datasets/import`, formData, { withCredentials: true })
+            return response.status === 200
+        } catch (error) {
+            console.error(error)
+            return false
         }
     }
 }
