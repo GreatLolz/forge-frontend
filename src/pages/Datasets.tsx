@@ -71,7 +71,7 @@ export default function Datasets() {
                             key={dataset.id} 
                             id={dataset.id} 
                             name={dataset.name} 
-                            type={DATASET_TYPES[dataset.type]} 
+                            type={DATASET_TYPES[dataset.type] || dataset.type} 
                             createdAt={dataset.created_at} 
                             updatedAt={dataset.updated_at} 
                             samples={dataset.sample_count} 
