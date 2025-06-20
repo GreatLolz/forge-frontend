@@ -1,5 +1,6 @@
 import axios from "axios"
 import type { UserDetails } from "../types/user"
+import type { Dataset } from "../types/datasets"
 
 export default class ApiClient {
     private static instance: ApiClient
@@ -24,6 +25,16 @@ export default class ApiClient {
         try {
             const response = await axios.get(`${this.api_url}/me`, { withCredentials: true })
             return response.data
+        } catch (error) {
+            console.error(error)
+            return null
+        }
+    }
+
+    public async getDatasets(): Promise<Dataset[] | null> {
+        try {
+            const response = await axios.get(`${this.api_url}/datasets`, { withCredentials: true })
+            return response.data.datasets
         } catch (error) {
             console.error(error)
             return null
