@@ -3,7 +3,7 @@ import ControlButton from "../components/datasets/ControlButton";
 import { Checkbox } from "@headlessui/react";
 import TableItem from "../components/datasets/TableItem";
 import { useEffect, useState } from "react";
-import type { Dataset } from "../types/datasets";
+import { DATASET_TYPES, type Dataset } from "../types/datasets";
 import ApiClient from "../utils/api";
 
 export default function Datasets() {
@@ -71,10 +71,10 @@ export default function Datasets() {
                             key={dataset.id} 
                             id={dataset.id} 
                             name={dataset.name} 
-                            type={dataset.type} 
+                            type={DATASET_TYPES[dataset.type]} 
                             createdAt={dataset.created_at} 
                             updatedAt={dataset.updated_at} 
-                            samples={dataset.samples} 
+                            samples={dataset.sample_count} 
                             checked={checkedItems[dataset.id] || false} 
                             onChange={(checked) => handleItemCheckboxChange(dataset.id, checked)} 
                         />
