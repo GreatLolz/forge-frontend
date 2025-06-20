@@ -1,100 +1,59 @@
 import TableItem from "../components/datasets/TableItem";
 import { useEffect, useRef, useState } from "react";
-import { DATASET_TYPES, type Dataset } from "../types/datasets";
-import ApiClient from "../utils/api";
+import { DATASET_TYPES } from "../types/datasets";
 import ControlPanel from "../components/datasets/ControlPanel";
 import TableHeader from "../components/datasets/TableHeader";
+import useDatasetActions from "../hooks/useDatasetActions";
+import useSelection from "../hooks/useSelection";
 
 export default function Datasets() {
-    const [mainChecked, setMainChecked] = useState(false)
-    const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({})
-    const [datasets, setDatasets] = useState<Dataset[]>([])
-    const [importFile, setImportFile] = useState<File | null>(null)
-
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [importFile, setImportFile] = useState<File | null>(null)
+    
+    const {
+        datasets,
+        fetchDatasets,
+        importDataset,
+        exportDataset,
+        deleteDataset
+    } = useDatasetActions()
+    
+    const {
+        mainChecked,
+        setMainChecked,
+        checkedItems,
+        handleItemChange,
+        resetSelections
+    } = useSelection(datasets)
 
     useEffect(() => {
-        refresh()
+        fetchDatasets()
     }, [])
-
-    const getDatasets = async () => {
-        try {
-            const _datasets = await ApiClient.getInstance().getDatasets()
-            setDatasets(_datasets)
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
+    
     useEffect(() => {
-        const newCheckedItems: Record<string, boolean> = {}
-        const itemIds = datasets.map(dataset => dataset.id)
-        itemIds.forEach(id => {
-            newCheckedItems[id] = mainChecked
-        })
-        setCheckedItems(newCheckedItems)
-    }, [mainChecked])
-
-    const handleItemCheckboxChange = (id: string, checked: boolean) => {
-        setCheckedItems(prev => ({
-            ...prev,
-            [id]: checked
-        }))
-    }
-
-    const refresh = () => {
-        const newCheckedItems: Record<string, boolean> = {}
-        const itemIds = datasets.map(dataset => dataset.id)
-        itemIds.forEach(id => {
-            newCheckedItems[id] = mainChecked
-        })
-        setCheckedItems(newCheckedItems)
-        getDatasets()
-    }
-
-    useEffect(() => {
-        importDataset()
-    }, [importFile])
-
-    const importDataset = async () => {
-        if (importFile) {
-            try {
-                await ApiClient.getInstance().importDataset(importFile)
-                refresh()
-            } catch (error) {
-                console.error(error)
+        const handleImport = async () => {
+            if (importFile) {
+                try {
+                    await importDataset(importFile);
+                    resetSelections();
+                } catch (error) {
+                    console.error("Import failed:", error);
+                }
             }
-        }
-    }
-
-    const exportDataset = async (id: string, filename: string) => {
-        try {
-            await ApiClient.getInstance().exportDataset(id, filename)
-            refresh()
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    const deleteDataset = async (id: string) => {
-        try {
-            await ApiClient.getInstance().deleteDataset(id)
-            refresh()
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
+        };
+        
+        handleImport();
+    }, [importFile]);
+    
     const handleControlClick = (action: string) => {
         switch (action) {
             case "create":
                 break;
             case "edit":
                 break;
-            case "rename":
-                break;
             case "refresh":
-                refresh()
+                fetchDatasets()
+                resetSelections()
                 break;
             case "import":
                 fileInputRef.current?.click()
@@ -120,7 +79,7 @@ export default function Datasets() {
                 break;
         }
     }
-
+    
     return (
         <div className="p-10 h-screen flex flex-col">
             <input className="hidden" type="file" onChange={(e) => setImportFile(e.target.files?.[0] || null)} ref={fileInputRef} />
@@ -139,7 +98,7 @@ export default function Datasets() {
                             updatedAt={new Date(dataset.updated_at).toLocaleString()} 
                             samples={dataset.sample_count} 
                             checked={checkedItems[dataset.id] || false} 
-                            onChange={(checked) => handleItemCheckboxChange(dataset.id, checked)} 
+                            onChange={(checked) => handleItemChange(dataset.id, checked)} 
                         />
                     ))}
                 </div>
