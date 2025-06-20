@@ -18,6 +18,13 @@ export default function Datasets() {
         getDatasets()
     }, [])
 
+    const getDatasets = async () => {
+        const _datasets = await ApiClient.getInstance().getDatasets()
+        if (_datasets) {
+            setDatasets(_datasets)
+        }
+    }
+
     useEffect(() => {
         const newCheckedItems: Record<string, boolean> = {}
         const itemIds = datasets.map(dataset => dataset.id)
@@ -27,24 +34,32 @@ export default function Datasets() {
         setCheckedItems(newCheckedItems)
     }, [mainChecked])
 
-    useEffect(() => {
-        if (importFile) {
-            ApiClient.getInstance().importDataset(importFile)
-        }
-    }, [importFile])
-
-    const getDatasets = async () => {
-        const _datasets = await ApiClient.getInstance().getDatasets()
-        if (_datasets) {
-            setDatasets(_datasets)
-        }
-    }
-
     const handleItemCheckboxChange = (id: string, checked: boolean) => {
         setCheckedItems(prev => ({
             ...prev,
             [id]: checked
         }))
+    }
+
+    useEffect(() => {
+        importDataset()
+    }, [importFile])
+
+    const importDataset = async () => {
+        if (importFile) {
+            await ApiClient.getInstance().importDataset(importFile)
+            getDatasets()
+        }
+    }
+
+    const refresh = () => {
+        const newCheckedItems: Record<string, boolean> = {}
+        const itemIds = datasets.map(dataset => dataset.id)
+        itemIds.forEach(id => {
+            newCheckedItems[id] = mainChecked
+        })
+        setCheckedItems(newCheckedItems)
+        getDatasets()
     }
 
     const handleControlClick = (action: string) => {
@@ -56,7 +71,7 @@ export default function Datasets() {
             case "rename":
                 break;
             case "refresh":
-                getDatasets()
+                refresh()
                 break;
             case "import":
                 fileInputRef.current?.click()
@@ -64,13 +79,18 @@ export default function Datasets() {
             case "export":
                 break;
             case "delete":
+                Object.entries(checkedItems).forEach(([id, checked]) => {
+                    if (checked) {
+                        ApiClient.getInstance().deleteDataset(id)
+                    }
+                })
                 break;
         }
     }
 
     return (
         <div className="p-10 h-screen flex flex-col">
-            <input type="file" onChange={(e) => setImportFile(e.target.files?.[0] || null)} ref={fileInputRef} />
+            <input className="hidden" type="file" onChange={(e) => setImportFile(e.target.files?.[0] || null)} ref={fileInputRef} />
             <h1 className="text-2xl font-bold mb-10">Datasets</h1>
             <div className="h-8 flex space-x-1">
                 <ControlButton icon={<Plus size={20} className="text-violet-300"/>} text="Create" onClick={() => handleControlClick("create")}/>
@@ -81,7 +101,7 @@ export default function Datasets() {
                 <ControlButton icon={<ArrowUpFromLine size={20} className="text-violet-300"/>} text="Export to..." onClick={() => handleControlClick("export")}/>
                 <ControlButton icon={<Trash size={20} className="text-violet-300"/>} text="Delete" onClick={() => handleControlClick("delete")}/>
             </div>
-            <div className="bg-neutral-900 w-full h-full mt-2 rounded-xl flex flex-col flex-1 overflow-hidden">
+            <div className="bg-neutral-900 w-full h-full mt-2 rounded-xl flex flex-col flex-1 overflow-hidden relative">
                 <div className="flex items-center px-2 w-full border-b border-b-neutral-700">
                     <Checkbox checked={mainChecked} onChange={setMainChecked} className="group w-5 h-5 border-neutral-700 border-1 hover:bg-neutral-800 flex items-center justify-center hover:cursor-default">
                         <div className="hidden group-data-[checked]:block bg-violet-300 p-1" />

@@ -54,4 +54,14 @@ export default class ApiClient {
             return false
         }
     }
+
+    public async deleteDataset(id: string): Promise<boolean> {
+        try {
+            const response = await axios.delete(`${this.api_url}/datasets/${id}`, { withCredentials: true })
+            return response.status === 200
+        } catch (error) {
+            console.error(error)
+            return false
+        }
+    }
 }
