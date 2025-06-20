@@ -1,4 +1,3 @@
-import { Checkbox } from "@headlessui/react";
 import TableItem from "../components/datasets/TableItem";
 import { useEffect, useRef, useState } from "react";
 import { DATASET_TYPES, type Dataset } from "../types/datasets";
@@ -15,13 +14,15 @@ export default function Datasets() {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        getDatasets()
+        refresh()
     }, [])
 
     const getDatasets = async () => {
-        const _datasets = await ApiClient.getInstance().getDatasets()
-        if (_datasets) {
+        try {
+            const _datasets = await ApiClient.getInstance().getDatasets()
             setDatasets(_datasets)
+        } catch (error) {
+            console.error(error)
         }
     }
 
@@ -47,8 +48,12 @@ export default function Datasets() {
 
     const importDataset = async () => {
         if (importFile) {
-            await ApiClient.getInstance().importDataset(importFile)
-            getDatasets()
+            try {
+                await ApiClient.getInstance().importDataset(importFile)
+                refresh()
+            } catch (error) {
+                console.error(error)
+            }
         }
     }
 
@@ -81,7 +86,12 @@ export default function Datasets() {
             case "delete":
                 Object.entries(checkedItems).forEach(([id, checked]) => {
                     if (checked) {
-                        ApiClient.getInstance().deleteDataset(id)
+                        try {
+                            ApiClient.getInstance().deleteDataset(id)
+                            refresh()
+                        } catch (error) {
+                            console.error(error)
+                        }
                     }
                 })
                 break;
