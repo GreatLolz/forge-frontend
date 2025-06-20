@@ -1,14 +1,9 @@
 import { useEffect } from "react";
+import ApiClient from "../utils/api";
 
 export default function Landing() {
-    const api_url = import.meta.env.VITE_API_URL || "/api/v1"
-
-    const login = () => {
-        window.location.href = `${api_url}/auth/login`;
-    }
-
     useEffect(() => {
-        login()
+        ApiClient.getInstance().login()
     }, [])
 
     return (
