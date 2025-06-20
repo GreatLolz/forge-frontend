@@ -42,6 +42,16 @@ export default function Datasets() {
         }))
     }
 
+    const refresh = () => {
+        const newCheckedItems: Record<string, boolean> = {}
+        const itemIds = datasets.map(dataset => dataset.id)
+        itemIds.forEach(id => {
+            newCheckedItems[id] = mainChecked
+        })
+        setCheckedItems(newCheckedItems)
+        getDatasets()
+    }
+
     useEffect(() => {
         importDataset()
     }, [importFile])
@@ -57,14 +67,13 @@ export default function Datasets() {
         }
     }
 
-    const refresh = () => {
-        const newCheckedItems: Record<string, boolean> = {}
-        const itemIds = datasets.map(dataset => dataset.id)
-        itemIds.forEach(id => {
-            newCheckedItems[id] = mainChecked
-        })
-        setCheckedItems(newCheckedItems)
-        getDatasets()
+    const exportDataset = async (id: string, filename: string) => {
+        try {
+            await ApiClient.getInstance().exportDataset(id, filename)
+            refresh()
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     const deleteDataset = async (id: string) => {
@@ -91,6 +100,16 @@ export default function Datasets() {
                 fileInputRef.current?.click()
                 break;
             case "export":
+                Object.entries(checkedItems).forEach(([id, checked]) => {
+                    if (checked) {
+                        const dataset = datasets.find(dataset => dataset.id === id)
+                        if (dataset) {
+                            exportDataset(id, dataset.name + ".json")
+                        } else {
+                            console.error("Tried exporting non-existent dataset with id: " + id)
+                        }
+                    }
+                })
                 break;
             case "delete":
                 Object.entries(checkedItems).forEach(([id, checked]) => {

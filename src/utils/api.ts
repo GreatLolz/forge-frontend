@@ -55,6 +55,32 @@ export default class ApiClient {
         }
     }
 
+    public async exportDataset(id: string, filename: string): Promise<void> {
+        try {
+            const response = await axios({
+                url: `${this.api_url}/datasets/export`,
+                method: "GET",
+                params: { dataset_id: id },
+                withCredentials: true,
+                responseType: "blob",
+            })
+
+            const href = URL.createObjectURL(new Blob([response.data]))
+
+            const link = document.createElement("a")
+            link.href = href
+            link.setAttribute("download", filename)
+            document.body.appendChild(link)
+            link.click()
+            
+            document.body.removeChild(link)
+            URL.revokeObjectURL(href)
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
     public async deleteDataset(id: string): Promise<boolean> {
         try {
             const response = await axios.delete(`${this.api_url}/datasets/${id}`, { withCredentials: true })
