@@ -67,6 +67,15 @@ export default function Datasets() {
         getDatasets()
     }
 
+    const deleteDataset = async (id: string) => {
+        try {
+            await ApiClient.getInstance().deleteDataset(id)
+            refresh()
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     const handleControlClick = (action: string) => {
         switch (action) {
             case "create":
@@ -86,12 +95,7 @@ export default function Datasets() {
             case "delete":
                 Object.entries(checkedItems).forEach(([id, checked]) => {
                     if (checked) {
-                        try {
-                            ApiClient.getInstance().deleteDataset(id)
-                            refresh()
-                        } catch (error) {
-                            console.error(error)
-                        }
+                        deleteDataset(id)
                     }
                 })
                 break;
