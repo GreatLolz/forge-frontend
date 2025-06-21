@@ -46,7 +46,7 @@ export default function MainSidebar({userDetails}: {userDetails: UserDetails}) {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {pages.map((page) => (
-                                <SidebarMenuItem>
+                                <SidebarMenuItem key={page.name}>
                                     <NavLink to={page.href}>
                                     {({ isActive }) => (
                                         <SidebarMenuButton asChild isActive={isActive}>
