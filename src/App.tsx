@@ -13,11 +13,12 @@ function App() {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null)
 
   const getUser = async () => {
-    const user = await ApiClient.getInstance().getUser()
-    if (user) {
-      setLoggedIn(true)
+    try {
+      const user = await ApiClient.getInstance().getUser()
       setUserDetails(user)
-    } else {
+      setLoggedIn(true)
+    } catch (error) {
+      console.error(error)
       setLoggedIn(false)
     }
   }
