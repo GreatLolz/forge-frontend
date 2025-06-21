@@ -3,10 +3,12 @@ import useDatasetActions from "../hooks/useDatasetActions";
 import { DataTable } from "@/components/datasets/table/DataTable";
 import { columns } from "@/components/datasets/table/columns";
 import ControlPanel from "@/components/datasets/ControlPanel";
+import type { Dataset } from "@/types/datasets";
 
 export default function Datasets() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [importFile, setImportFile] = useState<File | null>(null)
+    const [selection, setSelection] = useState<Dataset[]>([])
     
     const {
         datasets,
@@ -34,6 +36,10 @@ export default function Datasets() {
         handleImport();
     }, [importFile]);
 
+    const handleSelectionChange = (selection: Dataset[]) => {
+        setSelection(selection)
+    }
+
     const handleControlClick = (action: string) => {
         switch (action) {
             case "create":
@@ -41,12 +47,19 @@ export default function Datasets() {
             case "edit":
                 break;
             case "refresh":
+                fetchDatasets()
                 break;
             case "import":
+                fileInputRef.current?.click();
                 break;
             case "export":
+                selection.forEach((dataset) => exportDataset(dataset.id, dataset.name))
                 break;
             case "delete":
+                selection.forEach((dataset) => {
+                    setSelection(selection.filter((d) => d.id !== dataset.id))
+                    deleteDataset(dataset.id)
+                })
                 break;
         }
     }
@@ -58,7 +71,7 @@ export default function Datasets() {
             <div className="mb-2">
                 <ControlPanel handleControlClick={handleControlClick}/>
             </div>
-            <DataTable columns={columns} data={datasets}/>
+            <DataTable columns={columns} data={datasets} onSelectionChange={handleSelectionChange}/>
         </div>
     )
 }

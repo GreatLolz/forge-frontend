@@ -1,14 +1,16 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { type ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { type Row } from "@tanstack/react-table";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    onSelectionChange: (selection: TData[]) => void
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, onSelectionChange }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({})
 
     const table = useReactTable({
@@ -20,6 +22,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         },
         onRowSelectionChange: setRowSelection,
     })
+
+    useEffect(() => {
+      onSelectionChange(
+        Object.values(table.getSelectedRowModel().rowsById).map((row) => row.original)
+      )
+  }, [rowSelection]);
     
     return (
         <div className="rounded-md border h-full">
