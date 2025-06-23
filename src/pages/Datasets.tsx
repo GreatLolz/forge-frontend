@@ -67,12 +67,11 @@ export default function Datasets() {
     }
     
     return (
-        <div className="p-10 h-screen flex flex-col">
+        <div className="p-10 flex flex-col h-full">
             {loading && <div className="absolute inset-0 bg-neutral-700/50 flex items-center justify-center z-10 m-0">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-neutral-300"></div>
             </div>}
             <input className="hidden" type="file" onChange={(e) => setImportFile(e.target.files?.[0] || null)} ref={fileInputRef} />
-            <h1 className="text-2xl font-bold mb-10">Datasets</h1>
             <div className="mb-2">
                 <ControlPanel handleControlClick={handleControlClick}/>
             </div>
