@@ -4,7 +4,6 @@ import { DataTable } from "@/components/datasets/table/DataTable";
 import { columns } from "@/components/datasets/table/columns";
 import ControlPanel from "@/components/datasets/ControlPanel";
 import type { Dataset } from "@/types/datasets";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function Datasets() {
     const fileInputRef = useRef<HTMLInputElement>(null);

@@ -8,9 +8,11 @@ import ApiClient from "./utils/api";
 import Datasets from "./pages/Datasets";
 import Header from "./components/Header";
 import { PAGES } from "./types/app";
+import Logout from "./pages/Logout";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
+  const [loggingOut, setLoggingOut] = useState<boolean>(false)
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null)
   const location = useLocation()
 
@@ -25,6 +27,18 @@ function App() {
     }
   }
 
+  const logout = async () => {
+    try {
+        await ApiClient.getInstance().logout()
+    } catch (error) {
+        console.error(error)
+    } finally {
+        setUserDetails(null)
+        setLoggedIn(null)
+        setLoggingOut(true)
+    }
+  }
+
   useEffect(() => {
     getUser()
   }, [])
@@ -34,7 +48,7 @@ function App() {
       <div className="flex h-screen bg-neutral-950 text-neutral-300 w-full">
         {loggedIn && userDetails ? (
           <>
-            <MainSidebar userDetails={userDetails}/>
+            <MainSidebar userDetails={userDetails} onLogout={logout}/>
             <div className="flex flex-col h-full w-full">
                 <Header currentPage={
                     PAGES[location.pathname]
@@ -50,6 +64,8 @@ function App() {
           </>
         ) : loggedIn === false ? (
           <Landing />
+        ) : loggingOut ? (
+          <Logout />
         ) : (
           <></>
         )}
