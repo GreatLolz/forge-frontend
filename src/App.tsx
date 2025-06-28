@@ -1,24 +1,41 @@
-import { Route, Routes } from "react-router";
+import { Route, Routes, useLocation } from "react-router";
 import MainSidebar from "./components/MainSidebar";
-import Datasets from "./pages/Datasets";
 import Home from "./pages/Home";
 import { useEffect, useState } from "react";
 import Landing from "./pages/Landing";
 import type { UserDetails } from "./types/user";
-import User from "./components/User";
 import ApiClient from "./utils/api";
+import Datasets from "./pages/Datasets";
+import Header from "./components/Header";
+import { PAGES } from "./types/app";
+import Logout from "./pages/Logout";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
+  const [loggingOut, setLoggingOut] = useState<boolean>(false)
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null)
+  const location = useLocation()
 
   const getUser = async () => {
-    const user = await ApiClient.getInstance().getUser()
-    if (user) {
-      setLoggedIn(true)
+    try {
+      const user = await ApiClient.getInstance().getUser()
       setUserDetails(user)
-    } else {
+      setLoggedIn(true)
+    } catch (error) {
+      console.error(error)
       setLoggedIn(false)
+    }
+  }
+
+  const logout = async () => {
+    try {
+        await ApiClient.getInstance().logout()
+    } catch (error) {
+        console.error(error)
+    } finally {
+        setUserDetails(null)
+        setLoggedIn(null)
+        setLoggingOut(true)
     }
   }
 
@@ -28,20 +45,27 @@ function App() {
 
   return (
     <>
-      <div className="flex h-screen bg-neutral-950 text-neutral-300">
-        {loggedIn === true ? (
+      <div className="flex h-screen bg-neutral-950 text-neutral-300 w-full">
+        {loggedIn && userDetails ? (
           <>
-            <MainSidebar />
-            <div className="flex-1">
-              <Routes>
-                <Route index element={<Home />} />
-                <Route path="/datasets" element={<Datasets />} />
-              </Routes>
+            <MainSidebar userDetails={userDetails} onLogout={logout}/>
+            <div className="flex flex-col h-full w-full">
+                <Header currentPage={
+                    PAGES[location.pathname]
+                }/>
+                <div className="flex-1">
+                    <Routes>
+                        <Route index element={<Home />} />
+                        <Route path="/datasets" element={<Datasets />} />
+                    </Routes>
+                </div>
             </div>
-            <User userDetails={userDetails} />
+            
           </>
         ) : loggedIn === false ? (
           <Landing />
+        ) : loggingOut ? (
+          <Logout />
         ) : (
           <></>
         )}

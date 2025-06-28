@@ -1,15 +1,48 @@
 import { Pen, Plus, RefreshCcw, Import, ArrowUpFromLine, Trash } from "lucide-react";
-import ControlButton from "./ControlButton";
+import { Button } from "../ui/button";
+
+const actions = [
+    {
+        name: "Create",
+        icon: <Plus size={20}/>,
+        action: "create"
+    },
+    {
+        name: "Edit in Dataset Studio",
+        icon: <Pen size={20}/>,
+        action: "edit"
+    },
+    {
+        name: "Refresh",
+        icon: <RefreshCcw size={20}/>,
+        action: "refresh"
+    },
+    {
+        name: "Import from...",
+        icon: <Import size={20}/>,
+        action: "import"
+    },
+    {
+        name: "Export to...",
+        icon: <ArrowUpFromLine size={20}/>,
+        action: "export"
+    },
+    {
+        name: "Delete",
+        icon: <Trash size={20}/>,
+        action: "delete"
+    }
+]
 
 export default function ControlPanel({ handleControlClick }: { handleControlClick: (action: string) => void }) {
     return (
-        <div className="h-8 flex space-x-1">
-            <ControlButton icon={<Plus size={20} className="text-violet-300"/>} text="Create" onClick={() => handleControlClick("create")}/>
-            <ControlButton icon={<Pen size={20} className="text-violet-300"/>} text="Edit in Dataset Studio" onClick={() => handleControlClick("edit")}/>
-            <ControlButton icon={<RefreshCcw size={20} className="text-violet-300"/>} text="Refresh" onClick={() => handleControlClick("refresh")}/>
-            <ControlButton icon={<Import size={20} className="text-violet-300"/>} text="Import from..." onClick={() => handleControlClick("import")}/>
-            <ControlButton icon={<ArrowUpFromLine size={20} className="text-violet-300"/>} text="Export to..." onClick={() => handleControlClick("export")}/>
-            <ControlButton icon={<Trash size={20} className="text-violet-300"/>} text="Delete" onClick={() => handleControlClick("delete")}/>
+        <div className="flex gap-1">
+            {actions.map((action) => (
+                <Button key={action.action} onClick={() => handleControlClick(action.action)} className="bg-background hover:bg-secondary hover:cursor-pointer ">
+                    {action.icon}
+                    {action.name}
+                </Button>
+            ))}
         </div>
     )
 }

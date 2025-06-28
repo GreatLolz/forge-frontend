@@ -1,30 +1,23 @@
-import TableItem from "../components/datasets/TableItem";
 import { useEffect, useRef, useState } from "react";
-import { DATASET_TYPES } from "../types/datasets";
-import ControlPanel from "../components/datasets/ControlPanel";
-import TableHeader from "../components/datasets/TableHeader";
 import useDatasetActions from "../hooks/useDatasetActions";
-import useSelection from "../hooks/useSelection";
+import { DataTable } from "@/components/datasets/table/DataTable";
+import { columns } from "@/components/datasets/table/columns";
+import ControlPanel from "@/components/datasets/ControlPanel";
+import type { Dataset } from "@/types/datasets";
 
 export default function Datasets() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [importFile, setImportFile] = useState<File | null>(null)
+    const [selection, setSelection] = useState<Dataset[]>([])
     
     const {
         datasets,
+        loading,
         fetchDatasets,
         importDataset,
         exportDataset,
         deleteDataset
     } = useDatasetActions()
-    
-    const {
-        mainChecked,
-        setMainChecked,
-        checkedItems,
-        handleItemChange,
-        resetSelections
-    } = useSelection(datasets)
 
     useEffect(() => {
         fetchDatasets()
@@ -35,7 +28,6 @@ export default function Datasets() {
             if (importFile) {
                 try {
                     await importDataset(importFile);
-                    resetSelections();
                 } catch (error) {
                     console.error("Import failed:", error);
                 }
@@ -44,7 +36,11 @@ export default function Datasets() {
         
         handleImport();
     }, [importFile]);
-    
+
+    const handleSelectionChange = (selection: Dataset[]) => {
+        setSelection(selection)
+    }
+
     const handleControlClick = (action: string) => {
         switch (action) {
             case "create":
@@ -53,56 +49,32 @@ export default function Datasets() {
                 break;
             case "refresh":
                 fetchDatasets()
-                resetSelections()
                 break;
             case "import":
-                fileInputRef.current?.click()
+                fileInputRef.current?.click();
                 break;
             case "export":
-                Object.entries(checkedItems).forEach(([id, checked]) => {
-                    if (checked) {
-                        const dataset = datasets.find(dataset => dataset.id === id)
-                        if (dataset) {
-                            exportDataset(id, dataset.name + ".json")
-                        } else {
-                            console.error("Tried exporting non-existent dataset with id: " + id)
-                        }
-                    }
-                })
+                selection.forEach((dataset) => exportDataset(dataset.id, dataset.name))
                 break;
             case "delete":
-                Object.entries(checkedItems).forEach(([id, checked]) => {
-                    if (checked) {
-                        deleteDataset(id)
-                    }
+                selection.forEach((dataset) => {
+                    setSelection(selection.filter((d) => d.id !== dataset.id))
+                    deleteDataset(dataset.id)
                 })
                 break;
         }
     }
     
     return (
-        <div className="p-10 h-screen flex flex-col">
+        <div className="p-10 flex flex-col h-full">
+            {loading && <div className="absolute inset-0 bg-neutral-700/50 flex items-center justify-center z-10 m-0">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-neutral-300"></div>
+            </div>}
             <input className="hidden" type="file" onChange={(e) => setImportFile(e.target.files?.[0] || null)} ref={fileInputRef} />
-            <h1 className="text-2xl font-bold mb-10">Datasets</h1>
-            <ControlPanel handleControlClick={handleControlClick}/>
-            <div className="bg-neutral-900 w-full h-full mt-2 rounded-xl flex flex-col flex-1 overflow-hidden relative">
-                <TableHeader mainChecked={mainChecked} setMainChecked={setMainChecked}/>
-                <div className="overflow-y-auto flex-1 no-scrollbar">
-                    {datasets.map((dataset) => (
-                        <TableItem 
-                            key={dataset.id} 
-                            id={dataset.id} 
-                            name={dataset.name} 
-                            type={DATASET_TYPES[dataset.type] || dataset.type} 
-                            createdAt={new Date(dataset.created_at).toLocaleString()} 
-                            updatedAt={new Date(dataset.updated_at).toLocaleString()} 
-                            samples={dataset.sample_count} 
-                            checked={checkedItems[dataset.id] || false} 
-                            onChange={(checked) => handleItemChange(dataset.id, checked)} 
-                        />
-                    ))}
-                </div>
+            <div className="mb-2">
+                <ControlPanel handleControlClick={handleControlClick}/>
             </div>
+            <DataTable columns={columns} data={datasets} onSelectionChange={handleSelectionChange}/>
         </div>
     )
 }

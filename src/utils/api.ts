@@ -21,6 +21,15 @@ export default class ApiClient {
         window.location.href = `${this.api_url}/auth/login`;
     }
 
+    public async logout(): Promise<void> {
+        try {
+            await axios.get(`${this.api_url}/auth/logout`, { withCredentials: true })
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
     public async getUser(): Promise<UserDetails> {
         try {
             const response = await axios.get(`${this.api_url}/me`, { withCredentials: true })
