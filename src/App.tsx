@@ -8,11 +8,9 @@ import ApiClient from "./utils/api";
 import Datasets from "./pages/Datasets";
 import Header from "./components/Header";
 import { PAGES } from "./types/app";
-import Logout from "./pages/Logout";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
-  const [loggingOut, setLoggingOut] = useState<boolean>(false)
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null)
   const location = useLocation()
 
@@ -28,15 +26,9 @@ function App() {
   }
 
   const logout = async () => {
-    try {
-        await ApiClient.getInstance().logout()
-    } catch (error) {
-        console.error(error)
-    } finally {
-        setUserDetails(null)
-        setLoggedIn(null)
-        setLoggingOut(true)
-    }
+    setUserDetails(null)
+    setLoggedIn(null)
+    await ApiClient.getInstance().logout()
   }
 
   useEffect(() => {
@@ -64,8 +56,6 @@ function App() {
           </>
         ) : loggedIn === false ? (
           <Landing />
-        ) : loggingOut ? (
-          <Logout />
         ) : (
           <></>
         )}
