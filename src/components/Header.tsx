@@ -12,7 +12,8 @@ export default function Header() {
             <div className="border-r border-neutral-800 pr-1">
                 <SidebarTrigger/>
             </div>
-            <Breadcrumb className="ml-4">
+            {currentPage && (
+                <Breadcrumb className="ml-4">
                 <BreadcrumbList>
                 {currentPage.map((page, index) => (
                     <div key={page.href} className="flex items-center gap-2.5">
@@ -30,6 +31,7 @@ export default function Header() {
                 ))}
                 </BreadcrumbList>
             </Breadcrumb>
+            )}
         </div>
     )
 }
