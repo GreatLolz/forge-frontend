@@ -7,7 +7,7 @@ import type { UserDetails } from "./types/user";
 import ApiClient from "./utils/api";
 import Datasets from "./pages/Datasets";
 import Header from "./components/Header";
-import { PAGES } from "./types/app";
+import { BREADCRUMBS } from "./types/app";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
@@ -42,9 +42,7 @@ function App() {
           <>
             <MainSidebar userDetails={userDetails} onLogout={logout}/>
             <div className="flex flex-col h-full w-full">
-                <Header currentPage={
-                    PAGES[location.pathname]
-                }/>
+                <Header />
                 <div className="flex-1">
                     <Routes>
                         <Route index element={<Home />} />
