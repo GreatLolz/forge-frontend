@@ -5,7 +5,6 @@ interface BaseOption {
   type: OptionType;
   default?: any;
   description?: string;
-  required?: boolean;
 }
 
 interface BooleanOption extends BaseOption {
@@ -52,3 +51,35 @@ interface ConverterType {
 }
 
 type ConverterTypes = Record<string, ConverterType>;
+
+const CONVERTER_TYPES: ConverterTypes = {
+    "trace": {
+        options: {
+            "select_sample_count": {
+                label: "Select sample count",
+                type: "number",
+                default: 100,
+                description: "Number of samples to be selected from the dataset",
+            },
+            "human_to_ai_ratio": {
+                label: "Human to AI ratio",
+                type: "range",
+                min: 0,
+                max: 1,
+                default: 0.3,
+                description: "The percentage of the selected samples that should be sent to human reviewers",
+            },
+            "keep_model_responses": {
+                label: "Keep model responses",
+                type: "boolean",
+                default: false,
+            },
+            "commit_id": {
+                label: "Commit ID",
+                type: "string",
+                default: "Initial commit",
+                description: "ID of the first commit created for this dataset"
+            }
+        }
+    }
+}
