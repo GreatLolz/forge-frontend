@@ -1,40 +1,45 @@
+export type Converter = {
+    input_format: string,
+    output_formats: string[]
+}
+
 type OptionType = "boolean" | "number" | "range" | "enum" | "string";
 
 interface BaseOption {
   label: string;
   type: OptionType;
-  default?: any;
+  default: any;
   description?: string;
 }
 
 interface BooleanOption extends BaseOption {
   type: "boolean";
-  default?: boolean;
+  default: boolean;
 }
 
 interface NumberOption extends BaseOption {
   type: "number";
   min?: number;
   max?: number;
-  default?: number;
+  default: number;
 }
 
 interface RangeOption extends BaseOption {
   type: "range";
   min: number;
   max: number;
-  default?: number;
+  default: number;
 }
 
 interface EnumOption extends BaseOption {
   type: "enum";
   values: string[];
-  default?: string;
+  default: string;
 }
 
 interface StringOption extends BaseOption {
   type: "string";
-  default?: string;
+  default: string;
 }
 
 type ConverterOption =
