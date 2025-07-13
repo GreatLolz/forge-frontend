@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router";
+import { Route, Routes } from "react-router";
 import MainSidebar from "./components/MainSidebar";
 import Home from "./pages/Home";
 import { useEffect, useState } from "react";
@@ -7,13 +7,11 @@ import type { UserDetails } from "./types/user";
 import ApiClient from "./utils/api";
 import Datasets from "./pages/datasets/Datasets";
 import Header from "./components/Header";
-import { BREADCRUMBS } from "./types/app";
 import Create from "./pages/datasets/Create";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null)
-  const location = useLocation()
 
   const getUser = async () => {
     try {
