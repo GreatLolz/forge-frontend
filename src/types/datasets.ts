@@ -19,3 +19,12 @@ interface DatasetTypes {
 export const DATASET_TYPES: DatasetTypes = {
     "memory-sft": "Memory SFT",
 }
+
+interface InputTypes {
+    [key: string]: string
+}
+
+export const INPUT_TYPES: InputTypes = {
+    "trace": "Memory evaluation trace log",
+}
+

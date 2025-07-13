@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import useDatasetActions from "../hooks/useDatasetActions";
+import useDatasetActions from "@/hooks/useDatasetActions";
 import { DataTable } from "@/components/datasets/table/DataTable";
 import { columns } from "@/components/datasets/table/columns";
 import ControlPanel from "@/components/datasets/ControlPanel";
 import type { Dataset } from "@/types/datasets";
+import { useNavigate } from "react-router";
 
 export default function Datasets() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [importFile, setImportFile] = useState<File | null>(null)
     const [selection, setSelection] = useState<Dataset[]>([])
+
+    const navigate = useNavigate()
     
     const {
         datasets,
@@ -44,6 +47,7 @@ export default function Datasets() {
     const handleControlClick = (action: string) => {
         switch (action) {
             case "create":
+                navigate("/datasets/create")
                 break;
             case "edit":
                 break;

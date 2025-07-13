@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import Landing from "./pages/Landing";
 import type { UserDetails } from "./types/user";
 import ApiClient from "./utils/api";
-import Datasets from "./pages/Datasets";
+import Datasets from "./pages/datasets/Datasets";
 import Header from "./components/Header";
 import { BREADCRUMBS } from "./types/app";
+import Create from "./pages/datasets/Create";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null)
@@ -47,6 +48,7 @@ function App() {
                     <Routes>
                         <Route index element={<Home />} />
                         <Route path="/datasets" element={<Datasets />} />
+                        <Route path="/datasets/create" element={<Create />} />
                     </Routes>
                 </div>
             </div>
