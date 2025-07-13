@@ -1,7 +1,7 @@
 type OptionType = "boolean" | "number" | "range" | "enum" | "string";
 
 interface BaseOption {
-  name: string;
+  label: string;
   type: OptionType;
   default?: any;
   description?: string;
