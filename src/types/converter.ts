@@ -47,13 +47,15 @@ type ConverterOption =
 type ConverterOptions = Record<string, ConverterOption>;
 
 interface ConverterType {
-  options: ConverterOptions;
+    label: string;
+    options: ConverterOptions;
 }
 
 type ConverterTypes = Record<string, ConverterType>;
 
-const CONVERTER_TYPES: ConverterTypes = {
+export const CONVERTER_TYPES: ConverterTypes = {
     "trace": {
+        label: "Eval trace log",
         options: {
             "select_sample_count": {
                 label: "Select sample count",
