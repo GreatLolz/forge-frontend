@@ -1,6 +1,7 @@
 import axios from "axios"
 import type { UserDetails } from "../types/user"
 import type { Dataset } from "../types/datasets"
+import type { Converter } from "@/types/converter"
 
 export default class ApiClient {
     private static instance: ApiClient
@@ -89,6 +90,16 @@ export default class ApiClient {
         try {
             const response = await axios.delete(`${this.api_url}/datasets/${id}`, { withCredentials: true })
             return response.status === 200
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
+    public async getConverters(): Promise<Converter[]> {
+        try {
+            const response = await axios.get(`${this.api_url}/datasets/convert`, { withCredentials: true })
+            return response.data.converters
         } catch (error) {
             console.error(error)
             throw error
