@@ -8,11 +8,13 @@ import { useEffect, useState } from "react";
 import { CONVERTER_TYPES, type Converter } from "@/types/converter";
 import { DATASET_TYPES } from "@/types/datasets";
 import useCreateParams from "@/hooks/useCreateParams";
+import { Button } from "@/components/ui/button";
 
 export default function Create() {
     const [converters, setConverters] = useState<Converter[] | null>(null)
     const [selectedConverter, setSelectedConverter] = useState<Converter | undefined>(undefined)
     const [outputFormat, setOutputFormat] = useState<string | undefined>(undefined)
+    const [datasetFile, setDatasetFile] = useState<File | null>(null)
     const { params, updateParam, getParam } = useCreateParams()
     
     useEffect(() => {
@@ -31,6 +33,11 @@ export default function Create() {
                     <div className="flex flex-col items-center gap-2 w-full">
                         <h1 className="text-xl mb-2">Create new dataset</h1>
                         <Input placeholder="Name" className="w-full max-w-80"></Input>
+                        <Input 
+                            type="file" 
+                            className="max-w-60 hover:cursor-pointer file:border-1 file:rounded-md file:border-primary file:px-1 file:py-0.5 file:mt-[-1px] hover:file:border-primary/50" 
+                            onChange={(e) => setDatasetFile(e.target.files?.[0] || null)}
+                        />
                     </div>       
                     <div className="flex flex-col items-center gap-2">
                         <Select value={selectedConverter?.input_format} onValueChange={(value) => setSelectedConverter(converters?.find((converter) => converter.input_format === value))}>
@@ -57,6 +64,7 @@ export default function Create() {
                                         ))}
                                     </SelectContent>
                                 </Select>
+                                <Button className="w-full max-w-60 mt-5 hover:cursor-pointer">Submit</Button>
                             </>
                         )}
                     </div>
@@ -92,7 +100,6 @@ export default function Create() {
                                     </div>
                                 ))}
                             </div>
-                            <button onClick={() => console.log(params)}>check</button>
                         </>
                     ) : (
                         <span>(Input format must be selected)</span>
