@@ -7,11 +7,13 @@ import { ArrowDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CONVERTER_TYPES, type Converter } from "@/types/converter";
 import { DATASET_TYPES } from "@/types/datasets";
+import useCreateParams from "@/hooks/useCreateParams";
 
 export default function Create() {
     const [converters, setConverters] = useState<Converter[] | null>(null)
     const [selectedConverter, setSelectedConverter] = useState<Converter | undefined>(undefined)
     const [outputFormat, setOutputFormat] = useState<string | undefined>(undefined)
+    const { params, updateParam, getParam } = useCreateParams()
     
     useEffect(() => {
         const getConverters = async () => {
@@ -72,24 +74,25 @@ export default function Create() {
                                                 <span className="text-xs text-muted-foreground">{option.description}</span>
                                             </div>
                                             {option.type === "number" && (
-                                                <Input type="number" value={option.default}/>
+                                                <Input type="number" value={getParam(key) || option.default} onChange={(e) => updateParam(key, e.target.value)}/>
                                             )}
                                             {option.type === "range" && (
                                                 <>
-                                                    <span>30%</span>
-                                                    <Slider defaultValue={[option.default]} min={option.min} max={option.max} step={option.step}/>
+                                                    <span>{((getParam(key) || option.default) * 100).toFixed(0)}%</span>
+                                                    <Slider defaultValue={[getParam(key) || option.default]} min={option.min} max={option.max} step={option.step} onValueChange={(value) => updateParam(key, value)}/>
                                                 </>
                                             )}
                                             {option.type === "boolean" && (
-                                                <Checkbox />
+                                                <Checkbox checked={getParam(key) || option.default} onCheckedChange={(value) => updateParam(key, value)}/>
                                             )}
                                             {option.type === "string" && (
-                                                <Input value={option.default}/>
+                                                <Input value={getParam(key) || option.default} onChange={(e) => updateParam(key, e.target.value)}/>
                                             )}
                                         </div>
                                     </div>
                                 ))}
                             </div>
+                            <button onClick={() => console.log(params)}>check</button>
                         </>
                     ) : (
                         <span>(Input format must be selected)</span>
