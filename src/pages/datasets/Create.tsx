@@ -77,7 +77,7 @@ export default function Create() {
                                             {option.type === "range" && (
                                                 <>
                                                     <span>30%</span>
-                                                    <Slider defaultValue={[option.default]} min={option.min} max={option.max}/>
+                                                    <Slider defaultValue={[option.default]} min={option.min} max={option.max} step={option.step}/>
                                                 </>
                                             )}
                                             {option.type === "boolean" && (

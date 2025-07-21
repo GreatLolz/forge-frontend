@@ -28,6 +28,7 @@ interface RangeOption extends BaseOption {
   type: "range";
   min: number;
   max: number;
+  step: number;
   default: number;
 }
 
@@ -73,6 +74,7 @@ export const CONVERTER_TYPES: ConverterTypes = {
                 type: "range",
                 min: 0,
                 max: 1,
+                step: 0.01,
                 default: 0.3,
                 description: "The percentage of the selected samples that should be sent to human reviewers",
             },
