@@ -74,7 +74,7 @@ export default function Create() {
                                                 <span className="text-xs text-muted-foreground">{option.description}</span>
                                             </div>
                                             {option.type === "number" && (
-                                                <Input type="number" value={getParam(key) || option.default} onChange={(e) => updateParam(key, e.target.value)}/>
+                                                <Input type="number" value={getParam(key)} placeholder={option.default.toString()} onChange={(e) => updateParam(key, e.target.value)}/>
                                             )}
                                             {option.type === "range" && (
                                                 <>
@@ -86,7 +86,7 @@ export default function Create() {
                                                 <Checkbox checked={getParam(key) || option.default} onCheckedChange={(value) => updateParam(key, value)}/>
                                             )}
                                             {option.type === "string" && (
-                                                <Input value={getParam(key) || option.default} onChange={(e) => updateParam(key, e.target.value)}/>
+                                                <Input value={getParam(key)} placeholder={option.default} onChange={(e) => updateParam(key, e.target.value)}/>
                                             )}
                                         </div>
                                     </div>
