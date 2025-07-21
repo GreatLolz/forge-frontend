@@ -96,10 +96,27 @@ export default class ApiClient {
         }
     }
 
+    // datasets/create
+
     public async getConverters(): Promise<Converter[]> {
         try {
             const response = await axios.get(`${this.api_url}/datasets/convert`, { withCredentials: true })
             return response.data.converters
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
+    public async convert(inputFormat: string, name: string, datasetFile: File, outputFormat: string, params: Record<string, any>): Promise<boolean> {
+        try {
+            const formData = new FormData()
+            formData.append("import_file", datasetFile)
+            const response = await axios.post(`${this.api_url}/datasets/convert/${inputFormat}`, formData, { 
+                withCredentials: true,
+                params: { name: name, output_format: outputFormat, ...params }
+            })
+            return response.status === 200
         } catch (error) {
             console.error(error)
             throw error

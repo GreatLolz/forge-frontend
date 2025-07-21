@@ -9,13 +9,19 @@ import { CONVERTER_TYPES, type Converter } from "@/types/converter";
 import { DATASET_TYPES } from "@/types/datasets";
 import useCreateParams from "@/hooks/useCreateParams";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
+import { isAxiosError } from "axios";
 
 export default function Create() {
+    const navigate = useNavigate()
+    const [name, setName] = useState<string | undefined>(undefined)
     const [converters, setConverters] = useState<Converter[] | null>(null)
     const [selectedConverter, setSelectedConverter] = useState<Converter | undefined>(undefined)
     const [outputFormat, setOutputFormat] = useState<string | undefined>(undefined)
     const [datasetFile, setDatasetFile] = useState<File | null>(null)
     const { params, updateParam, getParam } = useCreateParams()
+
+    const [loading, setLoading] = useState(false)
     
     useEffect(() => {
         const getConverters = async () => {
@@ -26,13 +32,52 @@ export default function Create() {
         getConverters()
     }, [])
 
+    const handleSubmit = async () => {
+        if (!name) {
+            alert("Name is required!")
+            return
+        }
+
+        if (!outputFormat) {
+            alert("Output format is required!")
+            return
+        }
+
+        if (!datasetFile) {
+            alert("Dataset file is required!")
+            return
+        }
+
+        try {
+            setLoading(true)
+            await ApiClient.getInstance().convert(selectedConverter!.input_format, name, datasetFile, outputFormat, params)
+        } catch (error) {
+            if (isAxiosError(error) && error.status === 422) {
+                alert("Error while validating dataset.")
+                return
+            }
+
+            console.error(error)
+            alert("Error while creating dataset: " + error)
+            return
+        } finally {
+            setLoading(false)
+        }
+
+        alert("Dataset created successfully!")
+        navigate("/datasets")
+    }
+
     return (
         <div className="p-10 flex flex-col h-full justify-center items-center">
+            {loading && <div className="absolute inset-0 bg-neutral-700/50 flex items-center justify-center z-10 m-0">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-neutral-300"></div>
+            </div>}
             <div className="flex w-full h-full items-center justify-center">
                 <div className="p-10 border-r-neutral-700 border-r-1 w-full h-full flex flex-col items-center justify-center gap-10">
                     <div className="flex flex-col items-center gap-2 w-full">
                         <h1 className="text-xl mb-2">Create new dataset</h1>
-                        <Input placeholder="Name" className="w-full max-w-80"></Input>
+                        <Input placeholder="Name" className="w-full max-w-80" onChange={(e) => setName(e.target.value)}></Input>
                         <Input 
                             type="file" 
                             className="max-w-60 hover:cursor-pointer file:border-1 file:rounded-md file:border-primary file:px-1 file:py-0.5 file:mt-[-1px] hover:file:border-primary/50" 
@@ -64,7 +109,7 @@ export default function Create() {
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <Button className="w-full max-w-60 mt-5 hover:cursor-pointer">Submit</Button>
+                                <Button onClick={handleSubmit} className="w-full max-w-60 mt-5 hover:cursor-pointer">Submit</Button>
                             </>
                         )}
                     </div>
